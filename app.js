@@ -1,38 +1,64 @@
-var http = require("http"),
-    url = require("url"),
-    path = require("path"),
-    fs = require("fs")
-    port = process.argv[2] || 8888;
- 
-http.createServer(function(request, response) {
- 
-  var uri = url.parse(request.url).pathname
-    , filename = path.join(process.cwd(), uri);
-  
-  path.exists(filename, function(exists) {
-    if(!exists) {
-      response.writeHead(404, {"Content-Type": "text/plain"});
-      response.write("404 Not Found\n");
-      response.end();
-      return;
-    }
- 
-    if (fs.statSync(filename).isDirectory()) filename += '/index.html';
- 
-    fs.readFile(filename, "binary", function(err, file) {
-      if(err) {        
-        response.writeHead(500, {"Content-Type": "text/plain"});
-        response.write(err + "\n");
-        response.end();
-        return;
-      }
- 
-      response.writeHead(200);
-      //response.header('Access-Control-Allow-Origin', "*");
-      response.write(file, "binary");
-      response.end();
-    });
-  });
-}).listen(parseInt(port, 10));
- 
-console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+var port = process.env.PORT || 3000;
+var express = require('express');
+var http = require('http');
+var app = express();
+var server = http.createServer(app);
+var	io = require('socket.io').listen(server);
+var nicknames = [];
+
+server.listen(port);	
+
+app.get('/',function(req,res){
+	res.sendfile(__dirname + '/index.html');
+});
+
+io.sockets.on("connection",function(socket){
+	socket.emit("bienvenida",{text:'Ahora estas conectado'});
+
+	socket.on("nickname",function(data,callback){
+		if(nicknames.indexOf(data) != -1){
+			callback(false);
+		}else{
+			callback(true);
+			nicknames.push(data);
+			socket.nickname = data;
+			io.sockets.emit("nicknames",nicknames);
+			console.log("listado: "+nicknames);
+		}		
+	});
+
+	socket.on("user message",function(data){
+		io.sockets.emit("user message",{
+			nick:socket.nickname,
+			message:data
+		});
+	});
+
+	socket.on("disconnect",function(){
+		if(!socket.nickname) return;
+		nicknames.splice(nicknames.indexOf(socket.nickname),1);
+		console.log("listado nuevo: "+nicknames);
+	});
+	/*socket.on("nickname",function(data,fn){
+		if(nicknames.indexOf(data) != -1){
+			fn(true);
+		}else{
+			fn(false);
+			nicknames.push(data);
+			socket.nickname = data;
+			io.socket.emit("nicknames",nicknames);
+		}
+	});
+
+	socket.on("user message",function(data){
+		io.socket.emit("user message",{
+			nick:socket.nickname,
+			message:data
+		});
+	});
+
+	socket.on("disconnect",function(){
+		if(!socket.nicknames) return;
+		nicknames.splice(nicknames.indexOf(socket.nickname),1);
+	});*/
+});
