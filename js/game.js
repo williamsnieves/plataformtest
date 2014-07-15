@@ -101,13 +101,18 @@ module.exports = Menu;
   Play.prototype = {
     create: function() {
 
+      this.score = 0;
+      this.scoreText;
+
+      //esto se utiliza para ampliar el scenario
+
       this.game.world.setBounds(0, 0, 1400, 0);
 
       //this.background = this.game.add.sprite(0,0,'background');
 
       this.background = this.game.add.tileSprite(0,0, 1400, 600,'background');
 
-      this.ground = this.game.add.sprite(0,480,'floor');
+      this.ground = this.game.add.sprite(0,450,'floor');
 
       //this.table = this.game.add.sprite(0,120,'table');
       //this.table = this.game.add.sprite(0,180,'table');
@@ -120,10 +125,28 @@ module.exports = Menu;
       this.ground.body.allowGravity = false;
       this.ground.body.immovable = true;
 
-      console.log(this.ground);
+      //console.log(this.ground);
       //this.ground.body.enable = true;
 
       this.plataforms = this.game.add.group();
+
+      this.bigplataform = this.game.add.group();
+
+      this.bigplataform.enableBody = true;
+
+
+
+      var bigtable = this.bigplataform.create(580,180,'bigtable');
+
+      bigtable.body.immovable = true;
+
+      bigtable.body.allowGravity = true;
+
+      //bigtable.body.gravity.x = -10;
+
+      this.game.add.tween(bigtable.position).to( { y: 100 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+
+      //console.log(bigtable.cameraOffset);
 
       this.plataforms.enableBody = true;
 
@@ -135,7 +158,7 @@ module.exports = Menu;
 
       table.body.immovable = true;
 
-      table = this.plataforms.create(250,430, 'table');
+      table = this.plataforms.create(250,400, 'table');
 
       table.body.immovable = true;
 
@@ -143,7 +166,7 @@ module.exports = Menu;
 
       table.body.immovable = true;
 
-      this.player = this.game.add.sprite(32, this.game.world.height - 168, 'dude');
+      this.player = this.game.add.sprite(32, 300, 'dude');
 
   
       this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
@@ -161,11 +184,50 @@ module.exports = Menu;
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
       
+
+      this.coins = this.game.add.group();
+
+      this.coins.enableBody = true;
+
+    
+
+
+      for(var i = 0; i< 50; i++){
+        var coin  = this.coins.create(i * 50, 0, 'coin');
+
+        coin.body.gravity.y = 800;
+
+        //coin.body.bounce.y = 0.7 + Math.random() * 0.2;
+      }
+
+      this.scoreText = this.game.add.text(this.game.world.x,16,'Score: 280 / ',{ fontSize: '32px', fill: '#fff' })
+
+      this.scoreText.fixedToCamera = true;
+
+
+      this.bghud = this.game.add.sprite(0,500,'hudbg');
+
+      this.scoreText.fixedToCamera = true;
+      this.bghud.fixedToCamera = true;
+
+
+
+      console.log(this.scoreText)
+      console.log(this.stars);
     },
     update: function() {
+
       this.game.physics.arcade.collide(this.player, this.ground);
       this.game.physics.arcade.collide(this.player, this.plataforms);
 
+      this.game.physics.arcade.collide(this.coins, this.ground);
+      this.game.physics.arcade.collide(this.coins, this.plataforms);
+
+      this.game.physics.arcade.collide(this.coins, this.bigplataform);
+
+      this.game.physics.arcade.collide(this.player, this.bigplataform);
+      
+      this.game.physics.arcade.overlap(this.player, this.coins, this.collectStar, null, this);
       this.player.body.velocity.x = 0;
 
       if(this.cursors.left.isDown){
@@ -187,6 +249,16 @@ module.exports = Menu;
     },
     clickListener: function() {
       this.game.state.start('gameover');
+    },
+
+    collectStar : function(player, coin){
+      coin.kill();
+
+      this.score += 10;
+
+      console.log(this.score);
+
+      this.scoreText.text = "Score 280 / "+ this.score;
     }
   };
   
@@ -212,6 +284,7 @@ Preload.prototype = {
     this.load.image('table', 'assets/tablelarge.png');
     this.load.image('bigtable', 'assets/tablebig.png');
     this.load.image('coin', 'assets/coinsmall.png');
+    this.load.image('hudbg', 'assets/bghudbottom.png')
     this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   },
   create: function() {
