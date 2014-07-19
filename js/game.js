@@ -15,7 +15,77 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6}],2:[function(require,module,exports){
+},{"./states/boot":3,"./states/gameover":4,"./states/menu":5,"./states/play":6,"./states/preload":7}],2:[function(require,module,exports){
+'use strict';
+
+var Scoreboard = function(game) {
+  var gameover;
+
+  Phaser.Group.call(this, game);
+
+  gameover = this.create(this.game.width / 2, 100, 'gameover');
+
+  gameover.anchor.setTo(0.5,0.5);
+
+  this.scoreboard = this.create(this.game.width / 2, 200, 'scoreboard');
+  this.scoreboard.anchor.setTo(0.5, 0.5);
+
+  this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+  this.add(this.coinText);
+
+  this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+  this.add(this.livesText);
+
+  this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.startClick, this);
+  this.startButton.anchor.setTo(0.5,0.5);
+
+  this.add(this.startButton);
+
+  this.y = this.game.height;
+  this.x = 0;
+
+
+  // initialize your prefab here
+  
+};
+
+Scoreboard.prototype = Object.create(Phaser.Group.prototype);
+Scoreboard.prototype.constructor = Scoreboard;
+
+Scoreboard.prototype.showRestart = function(coins, lives){
+	  var currentcoins,currentlives; 
+    //this.coinText.setText(coins.toString());
+    localStorage.setItem('mycoins', coins);
+    localStorage.setItem('mylives', lives);
+
+    if(!!localStorage){
+        currentcoins = localStorage.getItem('mycoins');
+        currentlives = localStorage.getItem('mylives');
+    }
+    this.coinText.setText(currentcoins.toString());
+    this.livesText.setText(currentlives.toString());
+
+    this.game.add.tween(this).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true);
+};
+
+Scoreboard.prototype.showEndGame = function(){
+
+};
+
+Scoreboard.prototype.restartClick = function() {
+  var restart = true;
+  return restart;
+};
+
+Scoreboard.prototype.update = function() {
+  
+  // write your prefab's specific update code here
+  
+};
+
+module.exports = Scoreboard;
+
+},{}],3:[function(require,module,exports){
 
 'use strict';
 
@@ -34,7 +104,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -62,7 +132,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -94,15 +164,18 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
   'use strict';
+
+  var Scoreboard = require('../prefabs/scoreboard');
+
   function Play() {}
   Play.prototype = {
 
     create: function() {
 
-      this.countDown = 10;
+      this.countDown = 30;
       this.score = 0;
       this.scoreText;
 
@@ -312,7 +385,7 @@ module.exports = Menu;
        
       if (this.countDown === 0) {
         this.timer.stop();
-        this.endGame();
+        this.restartGame();
       }
     },
     clickListener: function() {
@@ -364,13 +437,21 @@ module.exports = Menu;
       timer.start();*/
       //this.clock.setText(minutes+':'+ this.countDown);
     },
-    endGame : function(){
+    restartGame : function(){
       console.log("reinicio el juego")
 
       this.live = this.lives.getFirstAlive();
 
       if(this.live){
         this.live.kill();
+
+        console.log(this.lives.countLiving());
+        console.log(this.score);
+        //console.log(new Scoreboard(this.game));
+
+        this.scoreboard = new Scoreboard(this.game);
+        this.game.add.existing(this.scoreboard);
+        this.scoreboard.showRestart(this.score,this.lives.countLiving());
       }
 
       if(this.lives.countLiving() < 1){
@@ -382,7 +463,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],6:[function(require,module,exports){
+},{"../prefabs/scoreboard":2}],7:[function(require,module,exports){
 
 'use strict';
 function Preload() {
