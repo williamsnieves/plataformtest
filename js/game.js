@@ -99,18 +99,20 @@ module.exports = Menu;
   'use strict';
   function Play() {}
   Play.prototype = {
+
     create: function() {
 
+      this.countDown = 10;
       this.score = 0;
       this.scoreText;
 
       //esto se utiliza para ampliar el scenario
 
-      this.game.world.setBounds(0, 0, 1400, 0);
+      this.game.world.setBounds(0, 0, 3000, 0);
 
       //this.background = this.game.add.sprite(0,0,'background');
 
-      this.background = this.game.add.tileSprite(0,0, 1400, 600,'background');
+      this.background = this.game.add.tileSprite(0,0, 3000, 600,'background');
 
       this.ground = this.game.add.sprite(0,450,'floor');
 
@@ -121,7 +123,7 @@ module.exports = Menu;
 
       this.game.physics.arcade.enableBody(this.ground);
 
-      this.ground.scale.setTo(2,1);
+      this.ground.scale.setTo(4,1);
       this.ground.body.allowGravity = false;
       this.ground.body.immovable = true;
 
@@ -150,7 +152,7 @@ module.exports = Menu;
 
       this.plataforms.enableBody = true;
 
-      var table = this.plataforms.create(0,150,'table')
+      var table = this.plataforms.create(700,150,'table')
       
       table.body.immovable = true;
 
@@ -200,15 +202,64 @@ module.exports = Menu;
         //coin.body.bounce.y = 0.7 + Math.random() * 0.2;
       }
 
-      this.scoreText = this.game.add.text(this.game.world.x,16,'Score: 280 / ',{ fontSize: '32px', fill: '#fff' })
 
-      this.scoreText.fixedToCamera = true;
-
+      
 
       this.bghud = this.game.add.sprite(0,500,'hudbg');
+      this.bghud.fixedToCamera = true;
+
+      
+      this.logohud = this.game.add.sprite(10,10,'logohud');
+
+      this.logohud.fixedToCamera = true; 
+
+
+      this.timesText = this.game.add.text(10,510,'Segundos',{ font: 'bold 20px Arial', fill: '#355b00'})
+      
+      this.clock = this.game.add.text(10,525,'01:00',{ font: '32px Cooper Std', fill: '#fff', stroke: '#355b00', strokeThickness : 6 })
+
+
+       
+
+      this.timer = this.game.time.create(false);
+
+      console.log(this.timer);
+
+      this.timer.loop(1000, this.updateCounter, this);
+
+      this.timer.start();
+    
+
+      this.timesText.fixedToCamera = true;
+
+      this.clock.fixedToCamera = true;
+
+      this.intents = this.game.add.text(700,510,'Intentos',{ font: 'bold 20px Arial', fill: '#355b00'})
+
+      this.lives = this.game.add.group();
+
+      for(var i=0; i< 3;i++){
+        var star = this.lives.create(700 + (27 * i), 535, 'stars');
+        star.fixedToCamera = true;
+        star.alpha = 0.7;
+      }
+
+      this.intents.fixedToCamera = true;
+
+      this.staticText = this.game.add.text(this.game.world.x + 580,510,'Monedas',{ font: 'bold 20px Arial', fill: '#355b00'});
+      this.scoreText = this.game.add.text(580,535,'280 / ',{ font: 'bold 20px Arial', fill: '#fff', stroke: '#355b00', strokeThickness : 7 })
+
+      //this.scoreText.anchor.set(0.5);
+
+      this.scoreText.textAlign = 'center';
 
       this.scoreText.fixedToCamera = true;
-      this.bghud.fixedToCamera = true;
+      this.staticText.fixedToCamera = true;
+
+      
+
+      this.scoreText.fixedToCamera = true;
+      
 
 
 
@@ -246,6 +297,23 @@ module.exports = Menu;
       if(this.cursors.up.isDown && this.player.body.touching.down){
         this.player.body.velocity.y = -250;
       }
+
+      //this.updatetimer();
+    },
+
+    updateCounter : function(){
+
+      --this.countDown;
+      if (this.countDown < 10) {
+        this.clock.setText('00:0' + this.countDown);
+      } else {
+        this.clock.setText('00:' + this.countDown);
+      }
+       
+      if (this.countDown === 0) {
+        this.timer.stop();
+        this.endGame();
+      }
     },
     clickListener: function() {
       this.game.state.start('gameover');
@@ -256,10 +324,61 @@ module.exports = Menu;
 
       this.score += 10;
 
+      /* codigo de los intentos */
+
+      /*this.live = this.lives.getFirstAlive();
+
+      if(this.live){
+        this.live.kill();
+      }
+
+      if(this.lives.countLiving() < 1){
+        this.player.kill();
+      }*/
+
+      /* fin del codigo de intentos*/
       console.log(this.score);
 
-      this.scoreText.text = "Score 280 / "+ this.score;
+      this.scoreText.text = "280 / "+ this.score;
+    },
+
+    updatetimer : function(){
+      console.log("cuenta atras: "+this.countDown)
+      /*var minutes = Math.floor(5 / 60000) % 60;
+ 
+      var seconds = Math.floor(60 / 1000) % 60;*/
+   
+      //milliseconds = Math.floor(game.time.time) % 100;
+   
+      //If any of the digits becomes a single digit number, pad it with a zero
+    
+   
+      /*if (seconds < 10)
+          seconds = '0' + seconds;
+   
+      if (minutes < 10)
+          minutes = '0' + minutes;*/
+
+      /*this.game.time.events.add(Phaser.Timer.MINUTES * 4, this.endGame, this);
+    
+      timer.start();*/
+      //this.clock.setText(minutes+':'+ this.countDown);
+    },
+    endGame : function(){
+      console.log("reinicio el juego")
+
+      this.live = this.lives.getFirstAlive();
+
+      if(this.live){
+        this.live.kill();
+      }
+
+      if(this.lives.countLiving() < 1){
+        this.player.kill();
+      }
     }
+
+
   };
   
   module.exports = Play;
@@ -279,12 +398,17 @@ Preload.prototype = {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
     //this.load.image('yeoman', 'assets/yeoman-logo.png');
-    this.load.image('background', 'assets/bglevel1.png');
+    this.load.image('background', 'assets/bglevel1extend.png');
     this.load.image('floor', 'assets/floorlevel1.png');
     this.load.image('table', 'assets/tablelarge.png');
     this.load.image('bigtable', 'assets/tablebig.png');
     this.load.image('coin', 'assets/coinsmall.png');
     this.load.image('hudbg', 'assets/bghudbottom.png')
+    this.load.image('logohud', 'assets/logosmallhud.png')
+    this.load.image('stars', 'assets/star.png');
+    this.load.image('gameover', 'assets/gameover.png');
+    this.load.image('scoreboard', 'assets/scoreboard.png');
+    this.load.image('btnrestart', 'assets/btncontinue.png');
     this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   },
   create: function() {
