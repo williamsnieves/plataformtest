@@ -15,77 +15,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":3,"./states/gameover":4,"./states/menu":5,"./states/play":6,"./states/preload":7}],2:[function(require,module,exports){
-'use strict';
-
-var Scoreboard = function(game) {
-  var gameover;
-
-  Phaser.Group.call(this, game);
-
-  gameover = this.create(this.game.width / 2, 100, 'gameover');
-
-  gameover.anchor.setTo(0.5,0.5);
-
-  this.scoreboard = this.create(this.game.width / 2, 200, 'scoreboard');
-  this.scoreboard.anchor.setTo(0.5, 0.5);
-
-  this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
-  this.add(this.coinText);
-
-  this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
-  this.add(this.livesText);
-
-  this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.startClick, this);
-  this.startButton.anchor.setTo(0.5,0.5);
-
-  this.add(this.startButton);
-
-  this.y = this.game.height;
-  this.x = 0;
-
-
-  // initialize your prefab here
-  
-};
-
-Scoreboard.prototype = Object.create(Phaser.Group.prototype);
-Scoreboard.prototype.constructor = Scoreboard;
-
-Scoreboard.prototype.showRestart = function(coins, lives){
-	  var currentcoins,currentlives; 
-    //this.coinText.setText(coins.toString());
-    localStorage.setItem('mycoins', coins);
-    localStorage.setItem('mylives', lives);
-
-    if(!!localStorage){
-        currentcoins = localStorage.getItem('mycoins');
-        currentlives = localStorage.getItem('mylives');
-    }
-    this.coinText.setText(currentcoins.toString());
-    this.livesText.setText(currentlives.toString());
-
-    this.game.add.tween(this).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true);
-};
-
-Scoreboard.prototype.showEndGame = function(){
-
-};
-
-Scoreboard.prototype.restartClick = function() {
-  var restart = true;
-  return restart;
-};
-
-Scoreboard.prototype.update = function() {
-  
-  // write your prefab's specific update code here
-  
-};
-
-module.exports = Scoreboard;
-
-},{}],3:[function(require,module,exports){
+},{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6}],2:[function(require,module,exports){
 
 'use strict';
 
@@ -104,7 +34,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -132,7 +62,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -164,20 +94,30 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
   'use strict';
 
-  var Scoreboard = require('../prefabs/scoreboard');
+  //var Scoreboard = require('../prefabs/scoreboard');
 
   function Play() {}
   Play.prototype = {
 
     create: function() {
 
-      this.countDown = 30;
+      this.countDown = 20;
+      this.counter = 4;
       this.score = 0;
       this.scoreText;
+      this.totalScore = 50;
+
+      this.limitLevel = 5;
+
+      this.currentLevel = 1;
+
+      localStorage.removeItem('restarted')
+
+      
 
       //esto se utiliza para ampliar el scenario
 
@@ -188,6 +128,17 @@ module.exports = Menu;
       this.background = this.game.add.tileSprite(0,0, 3000, 600,'background');
 
       this.ground = this.game.add.sprite(0,450,'floor');
+
+      /*var emitter;
+
+      emitter = this.game.add.emitter(200, 200, 200);
+
+      emitter.makeParticles('star');
+
+      console.log(emitter);
+      //  false means don't explode all the sprites at once, but instead release at a rate of 20 particles per frame
+      //  The 5000 value is the lifespan of each particle
+      emitter.start(false, 500, 100);*/
 
       //this.table = this.game.add.sprite(0,120,'table');
       //this.table = this.game.add.sprite(0,180,'table');
@@ -243,6 +194,8 @@ module.exports = Menu;
 
       this.player = this.game.add.sprite(32, 300, 'dude');
 
+      this.player.kill();
+
   
       this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
       
@@ -264,19 +217,34 @@ module.exports = Menu;
 
       this.coins.enableBody = true;
 
-    
+
+      this.bigCoins = this.game.add.group();
+
+      this.bigCoins.enableBody = true;
+      
 
 
-      for(var i = 0; i< 50; i++){
-        var coin  = this.coins.create(i * 50, 0, 'coin');
+      /*var bigCoin = this.bigCoins.create(590,0,'bigcoin'); 
+      bigCoin.body.gravity.y = 80;*/
+
+      for(var i = 0; i< 400; i++){
+        var coin  = this.coins.create(i * 50, 200, 'coin');
 
         coin.body.gravity.y = 800;
 
         //coin.body.bounce.y = 0.7 + Math.random() * 0.2;
       }
 
+      //for(var i = 0; i< 1; i++){
 
-      
+         this.bigcoin  = this.bigCoins.create(600, 0, 'bigcoin');
+
+         this.bigcoin.body.gravity.y = 800;
+        //coin.body.bounce.y = 0.7 + Math.random() * 0.2;
+      //}
+
+
+     
 
       this.bghud = this.game.add.sprite(0,500,'hudbg');
       this.bghud.fixedToCamera = true;
@@ -300,7 +268,7 @@ module.exports = Menu;
 
       this.timer.loop(1000, this.updateCounter, this);
 
-      this.timer.start();
+      //this.timer.start();
     
 
       this.timesText.fixedToCamera = true;
@@ -319,7 +287,7 @@ module.exports = Menu;
 
       this.intents.fixedToCamera = true;
 
-      this.staticText = this.game.add.text(this.game.world.x + 580,510,'Monedas',{ font: 'bold 20px Arial', fill: '#355b00'});
+      this.staticText = this.game.add.text(580,510,'Monedas',{ font: 'bold 20px Arial', fill: '#355b00'});
       this.scoreText = this.game.add.text(580,535,'280 / ',{ font: 'bold 20px Arial', fill: '#fff', stroke: '#355b00', strokeThickness : 7 })
 
       //this.scoreText.anchor.set(0.5);
@@ -335,7 +303,53 @@ module.exports = Menu;
       
 
 
+      
 
+      
+      this.initCounter = this.game.add.text(350,100,'')
+      this.initCounter.font = "Revalia";
+      this.initCounter.fontSize = "40px";
+      this.initCounter.fill = "#ff0000";
+
+      this.initCounter.fixedToCamera = true;
+
+
+      this.initTimer = this.game.time.create(false);
+
+      this.initTimer.loop(1000, this.updateInitCounter, this);
+
+      this.initTimer.start();
+
+
+      this.levelhud = this.game.add.sprite(700,10, 'levelhud');
+      this.levelhud.fixedToCamera = true;
+
+      this.levelText = this.game.add.text(708,12,'Nivel');
+      this.levelText.font = "Revalia";
+      this.levelText.fontSize = "20px";
+      this.levelText.fill = "#fff";
+
+      this.levelText.fixedToCamera = true;
+
+      this.currentlevelText = this.game.add.text(710,40,this.currentLevel);
+      this.currentlevelText.font = "Revalia";
+      this.currentlevelText.fontSize = "30px";
+      this.currentlevelText.fill = "#AFAA24";
+
+      this.currentlevelText.fixedToCamera = true;
+
+      this.limitlevelText = this.game.add.text(718,40,'/'+this.limitLevel);
+      this.limitlevelText.font = "Revalia";
+      this.limitlevelText.fontSize = "30px";
+      this.limitlevelText.fill = "#FFF";
+
+      this.limitlevelText.fixedToCamera = true;
+
+
+      
+
+      console.log("cronos");
+      console.log(this.cronos);
       console.log(this.scoreText)
       console.log(this.stars);
     },
@@ -352,24 +366,40 @@ module.exports = Menu;
       this.game.physics.arcade.collide(this.player, this.bigplataform);
       
       this.game.physics.arcade.overlap(this.player, this.coins, this.collectStar, null, this);
-      this.player.body.velocity.x = 0;
 
-      if(this.cursors.left.isDown){
-        this.player.body.velocity.x = -150;
-        this.player.animations.play('left');
-      }
-      else if(this.cursors.right.isDown){
-        this.player.body.velocity.x = 150;
-        this.player.animations.play('right');
-      }
-      else{
-        this.player.animations.stop();
-        this.player.frame = 4;
-      }
+      //this.game.physics.arcade.collide(this.bigCoins, this.plataforms);
 
-      if(this.cursors.up.isDown && this.player.body.touching.down){
-        this.player.body.velocity.y = -250;
+      this.game.physics.arcade.collide(this.bigCoins, this.bigplataform);      
+
+      this.game.physics.arcade.overlap(this.player, this.bigCoins, this.collectBigCoin, null, this);
+
+      
+      if(this.score < this.totalScore){
+          this.player.body.velocity.x = 0;
+
+          if(this.cursors.left.isDown){
+            this.player.body.velocity.x = -150;
+            this.player.animations.play('left');
+          }
+          else if(this.cursors.right.isDown){
+            this.player.body.velocity.x = 150;
+            this.player.animations.play('right');
+          }
+          else{
+            this.player.animations.stop();
+            this.player.frame = 4;
+          }
+
+          if(this.cursors.up.isDown && this.player.body.touching.down){
+            this.player.body.velocity.y = -250;
+          }
+      }else{
+          this.player.frame = 4;
+          this.player.body.velocity.y = 0;
+          this.player.body.velocity.x = 0;
+          this.player.animations.stop();
       }
+      
 
       //this.updatetimer();
     },
@@ -397,17 +427,22 @@ module.exports = Menu;
 
       this.score += 10;
 
-      /* codigo de los intentos */
+  
+      console.log(this.score);
 
-      /*this.live = this.lives.getFirstAlive();
+      this.scoreText.text = "280 / "+ this.score;
 
-      if(this.live){
-        this.live.kill();
+      if(this.score === this.totalScore){
+        this.timer.stop();
+        this.showCompleteLevel();
       }
+    },
 
-      if(this.lives.countLiving() < 1){
-        this.player.kill();
-      }*/
+    collectBigCoin : function(player, bigcoin){
+
+      
+      bigcoin.kill();
+      this.score += 50;
 
       /* fin del codigo de intentos*/
       console.log(this.score);
@@ -415,64 +450,301 @@ module.exports = Menu;
       this.scoreText.text = "280 / "+ this.score;
     },
 
-    updatetimer : function(){
-      console.log("cuenta atras: "+this.countDown)
-      /*var minutes = Math.floor(5 / 60000) % 60;
- 
-      var seconds = Math.floor(60 / 1000) % 60;*/
-   
-      //milliseconds = Math.floor(game.time.time) % 100;
-   
-      //If any of the digits becomes a single digit number, pad it with a zero
-    
-   
-      /*if (seconds < 10)
-          seconds = '0' + seconds;
-   
-      if (minutes < 10)
-          minutes = '0' + minutes;*/
-
-      /*this.game.time.events.add(Phaser.Timer.MINUTES * 4, this.endGame, this);
-    
-      timer.start();*/
-      //this.clock.setText(minutes+':'+ this.countDown);
-    },
     restartGame : function(){
       console.log("reinicio el juego")
 
       this.live = this.lives.getFirstAlive();
+      //this.scoreboard = new Scoreboard(this.game,this.player,this.timer,this.countDown);
+      
+      /* aqui agrego el scoreboard de forma manual invocando el sprite correspondiente */
+
+
+
 
       if(this.live){
+
+        this.showRestartScoreBoardGameOver();
+
         this.live.kill();
 
         console.log(this.lives.countLiving());
         console.log(this.score);
+
+        var currentcoins,currentlives; 
+      //this.coinText.setText(coins.toString());
+        localStorage.setItem('mycoins', this.score);
+        localStorage.setItem('mylives', this.lives.countLiving());
+
+        if(!!localStorage){
+            currentcoins = localStorage.getItem('mycoins');
+            currentlives = localStorage.getItem('mylives');
+        }
+        this.coinText.setText(currentcoins.toString());
+        this.livesText.setText(currentlives.toString());
+
+        
         //console.log(new Scoreboard(this.game));
 
-        this.scoreboard = new Scoreboard(this.game);
-        this.game.add.existing(this.scoreboard);
-        this.scoreboard.showRestart(this.score,this.lives.countLiving());
+        this.player.kill();
+        
+        //this.game.add.existing(this.scoreboard);
+        //this.scoreboard.showRestart(this.score,this.lives.countLiving());
+        
+        
+
+        //this.player.revive();
       }
 
       if(this.lives.countLiving() < 1){
+
+
+
+
         this.player.kill();
+
+        this.scoreboardGroup.destroy();
+
+        this.showScoreBoardGameOver();
+
+        console.log("pruebas");
+
+        /*this.startButton = this.game.add.button(this.game.width/2, 300, 'btnstart', this.restartClick, this);
+        this.startButton.anchor.setTo(0.5,0.5);*/
+
+        //alert("pruebas");
       }
+    },
+
+    restartClick : function(){
+
+      var that = this;
+
+      this.scoreboardGroup.forEach(function(item){
+        //console.log(item);
+        that.game.add.tween(item).to({alpha : 0}, 500, Phaser.Easing.Linear.None, true, 0);
+      })
+      //this.game.add.tween(this.scoreboardGroup._container).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0);
+      //this.game.add.tween(this.scoreboardGroup.scale).to( {x: 1.2, y: 1.2}, 1000, Phaser.Easing.Back.InOut, true, 0, false).yoyo(true);
+
+
+      this.restartElements();
+    },
+
+    restartElements : function(){
+
+      this.player.revive();
+
+      this.countDown = 5;
+
+      this.score = 0;
+
+      this.scoreText.text = "280 / "+ this.score;
+
+      this.timer = this.game.time.create(false);
+
+      console.log(this.timer);
+
+      this.timer.loop(1000, this.updateCounter, this);
+
+      this.timer.start();
+
+      //this.updateCounter();
+      //alert("reseteo elementos")
+    },
+
+    showScoreBoardGameOver : function(){
+        
+        this.scoreboardGroup = this.game.add.group();
+
+        this.scoreboardGroup.position.y = this.game.height;
+        this.scoreboardGroup.position.x = 0;
+
+      
+
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+
+        this.gameover.anchor.setTo(0.5,0.5);
+
+        this.gameover.fixedToCamera = true;
+
+        this.scoreboard = this.scoreboardGroup.create(this.game.width / 2, 200, 'scoreboard');
+        this.scoreboard.anchor.setTo(0.5, 0.5);
+
+        this.scoreboard.fixedToCamera = true;
+
+
+        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText.fixedToCamera = true;
+
+        this.scoreboardGroup.add(this.coinText);
+
+
+        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText.fixedToCamera = true;
+        this.scoreboardGroup.add(this.livesText);
+
+        this.initButton = this.game.add.button(this.game.width/2, 300, 'btnstart', this.gameOver, this);
+        this.initButton.anchor.setTo(0.5,0.5);
+
+        this.initButton.fixedToCamera = true;
+        this.scoreboardGroup.add(this.initButton);
+
+        var currentcoins,currentlives; 
+      //this.coinText.setText(coins.toString());
+        localStorage.setItem('mycoins', this.score);
+        localStorage.setItem('mylives', this.lives.countLiving());
+
+        if(!!localStorage){
+            currentcoins = localStorage.getItem('mycoins');
+            currentlives = localStorage.getItem('mylives');
+        }
+        this.coinText.setText(currentcoins.toString());
+        this.livesText.setText(currentlives.toString());  
+
+        //this.scoreboardGroup.remove(this.startButton);
+
+        
+        this.game.add.tween(this.scoreboardGroup.position).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true);
+    },
+
+    showRestartScoreBoardGameOver : function(){
+
+
+        this.scoreboardGroup = this.game.add.group();
+
+        this.scoreboardGroup.position.y = this.game.height;
+        this.scoreboardGroup.position.x = 0;
+
+      
+
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+
+        this.gameover.anchor.setTo(0.5,0.5);
+
+        this.gameover.fixedToCamera = true;
+
+        this.scoreboard = this.scoreboardGroup.create(this.game.width / 2, 200, 'scoreboard');
+        this.scoreboard.anchor.setTo(0.5, 0.5);
+
+        this.scoreboard.fixedToCamera = true;
+
+
+        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText.fixedToCamera = true;
+
+        this.scoreboardGroup.add(this.coinText);
+
+
+        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText.fixedToCamera = true;
+        this.scoreboardGroup.add(this.livesText);
+
+        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton.anchor.setTo(0.5,0.5);
+
+        this.startButton.fixedToCamera = true;
+        this.scoreboardGroup.add(this.startButton);
+
+
+
+
+
+
+        
+        this.game.add.tween(this.scoreboardGroup.position).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true);
+    },
+
+    showCompleteLevel : function(){
+        //this.player.kill();
+        console.log(this.player)
+        this.key = this.game.add.sprite(this.player.position.x + 60,this.player.position.y - 70,'key');
+        this.key.alpha = 0;
+
+        this.game.add.tween(this.key).to({alpha : 1}, 1000, Phaser.Easing.Linear.None, true, 0);
+        this.game.add.tween(this.key.position).to( {y: this.player.position.y - 50 }, 5000, Phaser.Easing.Back.InOut, true, 0, 5000, true);
+        var emitter;
+
+      emitter = this.game.add.emitter(this.key.position.x + 20, this.key.position.y , 200);
+
+      emitter.makeParticles('star');
+
+      console.log(emitter);
+      //  false means don't explode all the sprites at once, but instead release at a rate of 20 particles per frame
+      //  The 5000 value is the lifespan of each particle
+      emitter.start(false, 1000, 50);
+        /* = this.game.add.emitter(this.game.world.centerX, 10, 10);
+
+        this.emitterStar.makeParticles('starparticle');
+
+        console.log(this.emitterStar);
+
+        this.emitterStar.setScale(0.5, 1);
+        this.emitterStar.gravity = -200;
+
+        this.emitterStar.start(false, 500, 100); */
+
+        //alert("complete el nivel muestro la llave ")
+    },
+
+    gameOver : function(){
+        this.game.state.start("play");
+    },
+
+    updateInitCounter : function(){
+        
+        --this.counter;
+        this.initCounter.setText(this.counter);
+
+        if (this.counter < 1) {
+          this.initTimer.stop();
+          this.showInitText();
+        }
+    },
+
+    showInitText : function(){
+
+      this.game.add.tween(this.initCounter).to({alpha : 0}, 10, Phaser.Easing.Linear.None, true, 0);
+
+      this.player.revive();
+
+      this.timer.start();
+
+      this.initText = this.game.add.text(this.game.world.x + 300,100,'Vamos!!!');
+      this.initText.font = "Revalia";
+      this.initText.fontSize = "40px";
+      this.initText.fill = "#ff0000";
+
+      this.cronos = this.game.time.events.add(Phaser.Timer.SECOND * 1, this.removeInitText, this);
+
+    },
+
+    removeInitText : function(){
+        this.game.add.tween(this.initText).to({alpha : 0}, 500, Phaser.Easing.Linear.None, true, 0);
     }
 
 
   };
   
   module.exports = Play;
-},{"../prefabs/scoreboard":2}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 'use strict';
+
+var WebFontConfig;
+
+
 function Preload() {
   this.asset = null;
   this.ready = false;
 }
 
+
+
 Preload.prototype = {
   preload: function() {
+
+    this.game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+
     this.asset = this.add.sprite(this.width/2,this.height/2, 'preloader');
     this.asset.anchor.setTo(0.5, 0.5);
 
@@ -484,12 +756,17 @@ Preload.prototype = {
     this.load.image('table', 'assets/tablelarge.png');
     this.load.image('bigtable', 'assets/tablebig.png');
     this.load.image('coin', 'assets/coinsmall.png');
+    this.load.image('bigcoin', 'assets/bigcoin.png');
     this.load.image('hudbg', 'assets/bghudbottom.png')
     this.load.image('logohud', 'assets/logosmallhud.png')
     this.load.image('stars', 'assets/star.png');
     this.load.image('gameover', 'assets/gameover.png');
     this.load.image('scoreboard', 'assets/scoreboard.png');
-    this.load.image('btnrestart', 'assets/btncontinue.png');
+    this.load.image('btnstart', 'assets/btncontinue.png');
+    this.load.image('btnrestart', 'assets/restart.png');
+    this.load.image('levelhud', 'assets/bglevelhud.png');
+    this.load.image('key','assets/key.png');
+    this.load.image('star','assets/star_particle.png');
     this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   },
   create: function() {

@@ -1,5 +1,10 @@
 body {
+  font-family: 'Revalia', cursive;
   background-color: #333;
+}
+
+p{
+	color : #ff0000;
 }
 
 #plataform {
