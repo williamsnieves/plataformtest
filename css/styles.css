@@ -1,6 +1,10 @@
 body {
-  font-family: 'Revalia', cursive;
+  font-family: 'Cooper std';
   background-color: #333;
+}
+
+canvas{
+	font-family: 'Cooper std';
 }
 
 p{
@@ -8,6 +12,7 @@ p{
 }
 
 #plataform {
+  font-family: 'Cooper std';
   border: 2px solid white;
   width: 800px;
   margin-left: auto;
