@@ -77,12 +77,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 60;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -896,12 +896,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 60;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -1715,12 +1715,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 60;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -2534,12 +2534,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 60;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -3353,12 +3353,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 14;
+      this.countDown = 60;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
