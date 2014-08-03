@@ -7,6 +7,7 @@ window.onload = function () {
 
   // Game States
   game.state.add('boot', require('./states/boot'));
+  game.state.add('final', require('./states/final'));
   game.state.add('gameover', require('./states/gameover'));
   game.state.add('level1', require('./states/level1'));
   game.state.add('level2', require('./states/level2'));
@@ -19,7 +20,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":2,"./states/gameover":3,"./states/level1":4,"./states/level2":5,"./states/level3":6,"./states/level4":7,"./states/level5":8,"./states/menu":9,"./states/preload":10}],2:[function(require,module,exports){
+},{"./states/boot":2,"./states/final":3,"./states/gameover":4,"./states/level1":5,"./states/level2":6,"./states/level3":7,"./states/level4":8,"./states/level5":9,"./states/menu":10,"./states/preload":11}],2:[function(require,module,exports){
 
 'use strict';
 
@@ -39,6 +40,33 @@ Boot.prototype = {
 module.exports = Boot;
 
 },{}],3:[function(require,module,exports){
+
+'use strict';
+function Final() {}
+
+Final.prototype = {
+  preload: function() {
+
+  },
+  create: function() {
+    this.background = this.game.add.sprite(0,0,'bginit')
+    this.smalllogo = this.game.add.sprite(250,20, 'logofinal')
+    this.finalmessage = this.game.add.sprite(50,190, 'finalmessage')
+    //this.btnplay = this.game.add.sprite(130,290, 'buttoninit')
+
+    this.btnplay = this.game.add.button(this.game.world.centerX - 145, 520, 'buttoncompromiso', this.actionOnClick, this, 2, 1, 0);
+  },
+  actionOnClick : function(){
+    alert("voy a la seccion compromiso");
+  },
+  update: function() {
+    this.game.state.start('final')
+  }
+};
+
+module.exports = Final;
+
+},{}],4:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -66,7 +94,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
   'use strict';
 
@@ -77,12 +105,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 40;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -597,7 +625,7 @@ module.exports = GameOver;
 
       this.player.position.x = 0;
 
-      this.countDown = 60;
+      this.countDown = 40;
 
       this.score = 0;
 
@@ -636,13 +664,13 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
@@ -680,7 +708,7 @@ module.exports = GameOver;
 
       
 
-        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'tryagain');
 
         this.gameover.anchor.setTo(0.5,0.5);
 
@@ -692,17 +720,17 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
-        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton = this.game.add.button(this.game.width/2, 310, 'btnrestart', this.restartClick, this);
         this.startButton.anchor.setTo(0.5,0.5);
 
         this.startButton.fixedToCamera = true;
@@ -741,7 +769,7 @@ module.exports = GameOver;
     },
 
     gameOver : function(){
-        this.game.state.start("play");
+        this.game.state.start("level1");
     },
 
     updateInitCounter : function(){
@@ -795,12 +823,12 @@ module.exports = GameOver;
 
     
 
-      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal');
+      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal1');
       this.scorefinalboard.anchor.setTo(0.5, 0.5);
 
       this.scorefinalboard.fixedToCamera = true;
 
-      this.questionButton = this.game.add.button(this.game.width/2, 450, 'btnquestion', this.removeCanvas, this);
+      this.questionButton = this.game.add.button(this.game.width/2, 550, 'btnquestion', this.removeCanvas, this);
       this.questionButton.anchor.setTo(0.5,0.5);
 
       this.questionButton.fixedToCamera = true;
@@ -885,7 +913,7 @@ module.exports = GameOver;
   };
   
   module.exports = Level1;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
   'use strict';
 
@@ -896,12 +924,12 @@ module.exports = GameOver;
 
     create: function() {
 
-      this.countDown = 15;
+      this.countDown = 40;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -919,7 +947,7 @@ module.exports = GameOver;
 
       this.background = this.game.add.tileSprite(0,0, 3000, 600,'background2');
 
-      this.ground = this.game.add.sprite(0,450,'floor');
+      this.ground = this.game.add.sprite(0,450,'floor2');
 
       /*var emitter;
 
@@ -963,41 +991,44 @@ module.exports = GameOver;
 
       this.bigCoins.enableBody = true;
       
-      this.addBigTable(650,180,true)
+      this.addBigTable(650,180,false)
       
 
       //console.log(bigtable.cameraOffset);
 
-      this.addSmallTable(150,350);
-      this.addSmallTable(380,250);
-      this.addSmallTable(380,250);
+      this.addWall(40, 265);
 
-      this.addSmallTable(850,100);
+      this.addSmallTable(280,300);
 
-      this.addSmallTable(900,200);
+      this.addSmallTable(580,380);   
+
+      this.addSmallTable(850,280);
+
 
       this.addSmallTable(1200,200);
 
-      this.addSmallTable(980,300);
+      this.addSmallTable(1200,100);
 
-      this.addSmallTable(1200,400);
-
-      this.addSmallTable(1500,350);
-
-      this.addSmallTable(1500,250);
-
-      this.addSmallTable(1500,150);
-
-      this.addSmallTable(2250,250,true);
-
-      this.addBigTable(2560,150,true);
+      this.addSmallTable(1500,150,true,1800);
 
 
+      this.addSmallTable(1900,280);
+
+      this.addSmallTable(2200,250);
+      this.addSmallTable(2000,380);
+      this.addSmallTable(2300,150);
+
+      this.addBigTable(2000,100);
 
 
-      this.addWall(680, 265);
+      this.addBigTable(2700,150,true);
 
-      this.addWall(1950, 265);
+
+
+
+      
+
+      this.addWall(1500, 265);
 
       /*this.plataforms.enableBody = true;
 
@@ -1017,7 +1048,7 @@ module.exports = GameOver;
 
       table.body.immovable = true;*/
 
-      this.player = this.game.add.sprite(32, 300, 'dude');
+      this.player = this.game.add.sprite(100, 100, 'dude');
 
       this.player.kill();
 
@@ -1038,45 +1069,62 @@ module.exports = GameOver;
       this.cursors = this.game.input.keyboard.createCursorKeys();
       
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 3) * 50,200);
+        this.loadSmallCoins((i + 6) * 50,200);
       }
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 8) * 50,200);
+        this.loadSmallCoins((i + 12) * 50,200);
       }
 
+      for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 8) * 50,320);
+      }
 
-      this.loadSmallCoins(750,200);
+      this.loadBigCoins(670,0);
+
+
     
       for(var i = 0; i < 5; i++){
         this.loadSmallCoins((i + 17) * 50,50);
       }
 
       for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 19) * 50,150);
-      }
-
-      for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 25) * 50,150);
+        this.loadSmallCoins((i + 25) * 50,50);
       }
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 20) * 50,250);
+        this.loadSmallCoins((i + 24) * 50,150);
+      }
+
+      for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 25) * 50,300);
+      }
+
+      this.loadSmallCoins(1600,150);
+
+      this.loadSmallCoins(1800,50);
+
+      this.loadBigCoins(2020,0)
+
+      for(var i = 0; i < 5; i++){
+        this.loadSmallCoins((i + 38) * 50,250);
       } 
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 25) * 50,280);
+        this.loadSmallCoins((i + 40) * 50,280);
       } 
 
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,280);
+      for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 45) * 50,200);
       }
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,200);
+        this.loadSmallCoins((i + 48) * 50,100);
       } 
 
-      for(var i = 0; i < 5; i++){
+      this.loadBigCoins(2720,0)
+
+      /*for(var i = 0; i < 5; i++){
         this.loadSmallCoins((i + 30) * 50,100);
       } 
 
@@ -1099,7 +1147,7 @@ module.exports = GameOver;
 
       this.loadBigCoins(670,0);
 
-      this.loadBigCoins(2580,0);
+      this.loadBigCoins(2580,0);*/
 
       
 
@@ -1414,9 +1462,10 @@ module.exports = GameOver;
 
       this.player.revive();
 
-      this.player.position.x = 0;
+      this.player.position.x = 100
+      this.player.position.y = 100;
 
-      this.countDown = 60;
+      this.countDown = 40;
 
       this.score = 0;
 
@@ -1455,13 +1504,13 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
@@ -1499,7 +1548,7 @@ module.exports = GameOver;
 
       
 
-        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'tryagain');
 
         this.gameover.anchor.setTo(0.5,0.5);
 
@@ -1511,17 +1560,17 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
-        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton = this.game.add.button(this.game.width/2, 310, 'btnrestart', this.restartClick, this);
         this.startButton.anchor.setTo(0.5,0.5);
 
         this.startButton.fixedToCamera = true;
@@ -1560,7 +1609,7 @@ module.exports = GameOver;
     },
 
     gameOver : function(){
-        this.game.state.start("play");
+        this.game.state.start("level2");
     },
 
     updateInitCounter : function(){
@@ -1582,7 +1631,7 @@ module.exports = GameOver;
 
       this.timer.start();
 
-      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Vamos!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
+      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Corre!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
       /*this.initText.font = "Revalia";
       this.initText.fontSize = "40px";
       this.initText.fill = "#ff0000";*/
@@ -1614,12 +1663,12 @@ module.exports = GameOver;
 
     
 
-      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal');
+      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal2');
       this.scorefinalboard.anchor.setTo(0.5, 0.5);
 
       this.scorefinalboard.fixedToCamera = true;
 
-      this.questionButton = this.game.add.button(this.game.width/2, 450, 'btnquestion', this.removeCanvas, this);
+      this.questionButton = this.game.add.button(this.game.width/2, 550, 'btnquestion', this.removeCanvas, this);
       this.questionButton.anchor.setTo(0.5,0.5);
 
       this.questionButton.fixedToCamera = true;
@@ -1634,28 +1683,11 @@ module.exports = GameOver;
       //$("#plataform").hide();
       this.game.state.start('level3');
     },
-    loadSmallCoins : function(x, y, cant, mult){
+    loadSmallCoins : function(x, y){
         
         var coin  = this.coins.create(x, y, 'coin');
 
         coin.body.gravity.y = 800;
-
-        if(mult){
-          for(var i = 0; i< cant; i++){
-            var coin  = this.coins.create((i+3) * x, y, 'coin');
-
-            coin.body.gravity.y = 800;
-
-          }
-        }
-          
-        /*for(var i = 0; i< cant; i++){
-          var coin  = this.coins.create((i+3) * x, y, 'coin');
-
-          coin.body.gravity.y = 800;
-
-        //coin.body.bounce.y = 0.7 + Math.random() * 0.2;
-        }*/
 
 
     },
@@ -1667,14 +1699,14 @@ module.exports = GameOver;
 
 
     },
-    addSmallTable : function(x, y, tween){
+    addSmallTable : function(x, y, tween, toX){
 
         var table = this.plataforms.create(x,y,'table')
         
         table.body.immovable = true;
 
         if(tween)
-          this.game.add.tween(table.position).to( { x: 2350 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+          this.game.add.tween(table.position).to( { x: toX }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
 
 
     },
@@ -1694,7 +1726,7 @@ module.exports = GameOver;
     },
     addWall : function(x, y){
 
-      var wall = this.walls.create(x,y,'wall')
+      var wall = this.walls.create(x,y,'wall2')
         
       wall.body.immovable = true;
       
@@ -1704,23 +1736,30 @@ module.exports = GameOver;
   };
   
   module.exports = Level2;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
   'use strict';
 
   //var Scoreboard = require('../prefabs/scoreboard');
-
+var i=0;
+var update_interval = 4 * 60;
+var max = 0;
   function Level3() {}
   Level3.prototype = {
 
     create: function() {
 
-      this.countDown = 15;
+    
+
+
+    
+
+      this.countDown = 40;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -1738,7 +1777,7 @@ module.exports = GameOver;
 
       this.background = this.game.add.tileSprite(0,0, 3000, 600,'background3');
 
-      this.ground = this.game.add.sprite(0,450,'floor');
+      this.ground = this.game.add.sprite(0,450,'floor3');
 
       /*var emitter;
 
@@ -1782,32 +1821,32 @@ module.exports = GameOver;
 
       this.bigCoins.enableBody = true;
       
-      this.addBigTable(650,180,true)
       
 
       //console.log(bigtable.cameraOffset);
 
       this.addSmallTable(150,350);
       this.addSmallTable(380,250);
-      this.addSmallTable(380,250);
 
-      this.addSmallTable(850,100);
+      this.addSmallTable(950,380,true,320,3000);
 
-      this.addSmallTable(900,200);
+      this.addSmallTable(1250,380,true,250,5000);
 
-      this.addSmallTable(1200,200);
+      this.addSmallTable(1600,380,true,200,6000);
 
-      this.addSmallTable(980,300);
+      this.addSmallTable(1150,140);
 
-      this.addSmallTable(1200,400);
 
-      this.addSmallTable(1500,350);
+      this.addBigTable(1800,100);
+      
 
-      this.addSmallTable(1500,250);
+      
 
-      this.addSmallTable(1500,150);
+      this.addSmallTable(2250,250,false,0,0,true);
 
-      this.addSmallTable(2250,250,true);
+      this.addSmallTable(2250,340);
+
+      this.addSmallTable(2700,260);
 
       this.addBigTable(2560,150,true);
 
@@ -1868,59 +1907,49 @@ module.exports = GameOver;
       this.loadSmallCoins(750,200);
     
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 17) * 50,50);
+        this.loadSmallCoins((i + 23) * 50,50);
+      }
+
+      this.loadBigCoins(1820,0);
+
+      
+
+      for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 28) * 50,380);
       }
 
       for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 19) * 50,150);
+        this.loadSmallCoins((i + 35) * 50,380);
       }
+
+      
+      for(var i = 0; i < 5; i++){
+        this.loadSmallCoins((i + 45) * 50,250);
+      } 
+
+      for(var i = 0; i < 5; i++){
+        this.loadSmallCoins((i + 54) * 50,200);
+      } 
+
+    
 
       for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 25) * 50,150);
+        this.loadSmallCoins((i + 50) * 50,380);
       }
 
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 20) * 50,250);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 25) * 50,280);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,280);
-      }
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,200);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,100);
-      } 
-
-      for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 35) * 50,280);
-      }
-
-      this.loadSmallCoins(2000,150);
+      
 
       for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 47) * 50,100);
+        this.loadSmallCoins((i + 54) * 50,380);
       }
 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 55) * 50,280);
-      }
 
       //this.loadSmallCoins(200,100,40);
 
-      this.loadBigCoins(670,0);
-
-      this.loadBigCoins(2580,0);
 
       
+
+      this.loadBigCoins(2580,0);
 
 
       /*var bigCoin = this.bigCoins.create(590,0,'bigcoin'); 
@@ -2037,7 +2066,43 @@ module.exports = GameOver;
       this.limitlevelText.fixedToCamera = true;
 
 
-      
+    this.front_emitter = this.game.add.emitter(this.game.world.centerX, -32, 50);
+    this.front_emitter.makeParticles('sheet', [0, 1, 2, 3, 4, 5,6,7,8,9]);
+    this.front_emitter.maxParticleScale = 0.5;
+    this.front_emitter.minParticleScale = 0.2;
+    this.front_emitter.setYSpeed(100, 200);
+    this.front_emitter.gravity = 0;
+    this.front_emitter.width = this.game.world.width * 1.5;
+    this.front_emitter.minRotation = 0;
+    this.front_emitter.maxRotation = 40;
+
+    this.back_emitter = this.game.add.emitter(this.game.world.centerX, -32, 600);
+    this.back_emitter.makeParticles('sheet', [0, 1, 2, 3, 4, 5]);
+    this.back_emitter.maxParticleScale = 0.1;
+    this.back_emitter.minParticleScale = 0.4;
+    this.back_emitter.setYSpeed(20, 100);
+    this.back_emitter.gravity = 0;
+    this.back_emitter.width = this.game.world.width * 1.5;
+    this.back_emitter.minRotation = 0;
+    this.back_emitter.maxRotation = 40;
+
+    this.mid_emitter = this.game.add.emitter(this.game.world.centerX, -32, 250);
+    this.mid_emitter.makeParticles('sheet', [0, 1, 2, 3, 4, 5]);
+    this.mid_emitter.maxParticleScale = 0.7;
+    this.mid_emitter.minParticleScale = 0.3;
+    this.mid_emitter.setYSpeed(50, 150);
+    this.mid_emitter.gravity = 0;
+    this.mid_emitter.width = this.game.world.width * 1.5;
+    this.mid_emitter.minRotation = 0;
+    this.mid_emitter.maxRotation = 40;
+
+    this.changeWindDirection();
+
+    console.log("nieve");
+    console.log(this.front_emitter);
+    this.front_emitter.start(false, 6000, 1000);
+    this.mid_emitter.start(false, 6000, 1000);
+    this.back_emitter.start(false, 6000, 1000);
 
       console.log("cronos");
       console.log(this.cronos);
@@ -2094,6 +2159,17 @@ module.exports = GameOver;
           this.player.animations.stop();
       }
       
+
+
+
+      i++;
+
+      if (i === update_interval)
+      {
+          this.changeWindDirection();
+          update_interval = Math.floor(Math.random() * 20) * 60; // 0 - 20sec @ 60fps
+          i = 0;
+      }
 
       //this.updatetimer();
     },
@@ -2235,7 +2311,7 @@ module.exports = GameOver;
 
       this.player.position.x = 0;
 
-      this.countDown = 60;
+      this.countDown = 40;
 
       this.score = 0;
 
@@ -2274,13 +2350,13 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
@@ -2318,7 +2394,7 @@ module.exports = GameOver;
 
       
 
-        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'tryagain');
 
         this.gameover.anchor.setTo(0.5,0.5);
 
@@ -2330,17 +2406,17 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
-        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton = this.game.add.button(this.game.width/2, 310, 'btnrestart', this.restartClick, this);
         this.startButton.anchor.setTo(0.5,0.5);
 
         this.startButton.fixedToCamera = true;
@@ -2379,7 +2455,7 @@ module.exports = GameOver;
     },
 
     gameOver : function(){
-        this.game.state.start("play");
+        this.game.state.start("level3");
     },
 
     updateInitCounter : function(){
@@ -2401,7 +2477,7 @@ module.exports = GameOver;
 
       this.timer.start();
 
-      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Vamos!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
+      this.initText = this.game.add.text(this.game.world.x + 250,100,'¡Apresúrate!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
       /*this.initText.font = "Revalia";
       this.initText.fontSize = "40px";
       this.initText.fill = "#ff0000";*/
@@ -2433,12 +2509,12 @@ module.exports = GameOver;
 
     
 
-      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal');
+      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal3');
       this.scorefinalboard.anchor.setTo(0.5, 0.5);
 
       this.scorefinalboard.fixedToCamera = true;
 
-      this.questionButton = this.game.add.button(this.game.width/2, 450, 'btnquestion', this.removeCanvas, this);
+      this.questionButton = this.game.add.button(this.game.width/2, 550, 'btnquestion', this.removeCanvas, this);
       this.questionButton.anchor.setTo(0.5,0.5);
 
       this.questionButton.fixedToCamera = true;
@@ -2486,14 +2562,35 @@ module.exports = GameOver;
 
 
     },
-    addSmallTable : function(x, y, tween){
+    addSmallTable : function(x, y, tween, toY, speed, yoyo){
 
         var table = this.plataforms.create(x,y,'table')
         
         table.body.immovable = true;
 
+        console.log(yoyo);
+
+        if(typeof(tween) === "undefined"){
+          tween = false
+        }
+
+        if(typeof(yoyo) === "undefined"){
+          yoyo = false;
+        }
+
+
+         console.log(yoyo);
+
         if(tween)
-          this.game.add.tween(table.position).to( { x: 2350 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+          this.game.add.tween(table.position).to( { y: toY }, speed, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+
+        if(yoyo){
+          
+          this.game.add.tween(table.position).to( { y: -10 }, 7000, Phaser.Easing.Back.InOut, true, 0, 7000, true);
+          this.game.add.tween(table).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 0, 2000, false)
+          //.to( { y: 2000 }, 800, Phaser.Easing.Back.InOut, true, 0, 800, true);
+        
+        }
 
 
     },
@@ -2513,33 +2610,64 @@ module.exports = GameOver;
     },
     addWall : function(x, y){
 
-      var wall = this.walls.create(x,y,'wall')
+      var wall = this.walls.create(x,y,'wall2')
         
       wall.body.immovable = true;
       
+    },
+    changeWindDirection : function() {
+
+      var multi = Math.floor((max + 200) / 4),
+          frag = (Math.floor(Math.random() * 100) - multi);
+      max = max + frag;
+
+      if (max > 200) max = 150;
+      if (max < -200) max = -150;
+
+      this.setXSpeed(this.front_emitter, max);
+
+    },
+    setXSpeed : function(emitter, max) {
+
+      emitter.setXSpeed(max - 20, max);
+      emitter.forEachAlive(this.setParticleXSpeed, this, max);
+
+    },
+
+    setParticleXSpeed : function(particle, max) {
+
+      particle.body.velocity.x = max - Math.floor(Math.random() * 30);
+
     }
 
 
   };
   
   module.exports = Level3;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
   'use strict';
 
   //var Scoreboard = require('../prefabs/scoreboard');
-
+var i=0;
+var update_interval = 4 * 60;
+var max = 0;
   function Level4() {}
   Level4.prototype = {
 
     create: function() {
 
-      this.countDown = 15;
+    
+
+
+    
+
+      this.countDown = 45;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -2557,7 +2685,7 @@ module.exports = GameOver;
 
       this.background = this.game.add.tileSprite(0,0, 3000, 600,'background4');
 
-      this.ground = this.game.add.sprite(0,450,'floor');
+      this.ground = this.game.add.sprite(0,450,'floor4');
 
       /*var emitter;
 
@@ -2601,41 +2729,48 @@ module.exports = GameOver;
 
       this.bigCoins.enableBody = true;
       
-      this.addBigTable(650,180,true)
       
 
       //console.log(bigtable.cameraOffset);
 
       this.addSmallTable(150,350);
       this.addSmallTable(380,250);
-      this.addSmallTable(380,250);
 
-      this.addSmallTable(850,100);
+      this.addSmallTable(1000,400,true,245,4000);
 
-      this.addSmallTable(900,200);
+      this.addSmallTable(1000,140);
 
-      this.addSmallTable(1200,200);
+      this.addSmallTable(1400,240,false,0,1800,true,1600);
 
-      this.addSmallTable(980,300);
+      this.addSmallTable(1950,100);
+      this.addSmallTable(1950,200);
+      this.addSmallTable(1950,300);
 
-      this.addSmallTable(1200,400);
 
-      this.addSmallTable(1500,350);
+      //this.addBigTable(1800,100);
+      
 
-      this.addSmallTable(1500,250);
+      
 
-      this.addSmallTable(1500,150);
+      /*this.addSmallTable(2250,250,false,0,0,true);
 
-      this.addSmallTable(2250,250,true);
+      this.addSmallTable(2250,340);
 
-      this.addBigTable(2560,150,true);
+      this.addSmallTable(2700,260);*/
+
+       this.addBigTable(2780,250,true,5000,350);
+
+      this.addBigTable(2600,150,true,6000,400);
+
+
+     
 
 
 
 
       this.addWall(680, 265);
 
-      this.addWall(1950, 265);
+      this.addWall(2300, 265);
 
       /*this.plataforms.enableBody = true;
 
@@ -2683,63 +2818,67 @@ module.exports = GameOver;
         this.loadSmallCoins((i + 8) * 50,200);
       }
 
-
-      this.loadSmallCoins(750,200);
     
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 17) * 50,50);
+        this.loadSmallCoins((i + 20) * 50,50);
       }
 
-      for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 19) * 50,150);
+       for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 30) * 50,300);
       }
 
       for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 25) * 50,150);
+        this.loadSmallCoins((i + 35) * 50,300);
       }
 
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 20) * 50,250);
-      } 
+
+      
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 25) * 50,280);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,280);
+        this.loadSmallCoins((i + 39) * 50,50);
       }
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,200);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,100);
-      } 
-
-      for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 35) * 50,280);
-      }
-
-      this.loadSmallCoins(2000,150);
 
       for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 47) * 50,100);
+        this.loadSmallCoins((i + 40) * 50,150);
+      }
+      for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 41) * 50,200);
       }
 
+      /*for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 35) * 50,380);
+      }
+
+      
+      for(var i = 0; i < 5; i++){
+        this.loadSmallCoins((i + 45) * 50,250);
+      } 
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 55) * 50,280);
+        this.loadSmallCoins((i + 54) * 50,200);
+      } 
+
+    
+
+      for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 50) * 50,380);
       }
+
+      
+
+      for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 54) * 50,380);
+      }*/
+
 
       //this.loadSmallCoins(200,100,40);
 
-      this.loadBigCoins(670,0);
-
-      this.loadBigCoins(2580,0);
 
       
+
+      this.loadBigCoins(2800,0);
+
+      this.loadBigCoins(2615,50);
 
 
       /*var bigCoin = this.bigCoins.create(590,0,'bigcoin'); 
@@ -2856,7 +2995,43 @@ module.exports = GameOver;
       this.limitlevelText.fixedToCamera = true;
 
 
-      
+    this.front_emitter = this.game.add.emitter(this.game.world.centerX, -32, 50);
+    this.front_emitter.makeParticles('snowflakes_large', [0, 1, 2, 3, 4, 5]);
+    this.front_emitter.maxParticleScale = 1;
+    this.front_emitter.minParticleScale = 0.5;
+    this.front_emitter.setYSpeed(100, 200);
+    this.front_emitter.gravity = 0;
+    this.front_emitter.width = this.game.world.width * 1.5;
+    this.front_emitter.minRotation = 0;
+    this.front_emitter.maxRotation = 40;
+
+    this.back_emitter = this.game.add.emitter(this.game.world.centerX, -32, 600);
+    this.back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
+    this.back_emitter.maxParticleScale = 0.6;
+    this.back_emitter.minParticleScale = 0.2;
+    this.back_emitter.setYSpeed(20, 100);
+    this.back_emitter.gravity = 0;
+    this.back_emitter.width = this.game.world.width * 1.5;
+    this.back_emitter.minRotation = 0;
+    this.back_emitter.maxRotation = 40;
+
+    this.mid_emitter = this.game.add.emitter(this.game.world.centerX, -32, 250);
+    this.mid_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
+    this.mid_emitter.maxParticleScale = 1.2;
+    this.mid_emitter.minParticleScale = 0.8;
+    this.mid_emitter.setYSpeed(50, 150);
+    this.mid_emitter.gravity = 0;
+    this.mid_emitter.width = this.game.world.width * 1.5;
+    this.mid_emitter.minRotation = 0;
+    this.mid_emitter.maxRotation = 40;
+
+    this.changeWindDirection();
+
+    console.log("nieve");
+    console.log(this.front_emitter);
+    this.front_emitter.start(false, 14000, 20);
+    this.mid_emitter.start(false, 12000, 40);
+    this.back_emitter.start(false, 6000, 1000);
 
       console.log("cronos");
       console.log(this.cronos);
@@ -2913,6 +3088,17 @@ module.exports = GameOver;
           this.player.animations.stop();
       }
       
+
+
+
+      i++;
+
+      if (i === update_interval)
+      {
+          this.changeWindDirection();
+          update_interval = Math.floor(Math.random() * 20) * 60; // 0 - 20sec @ 60fps
+          i = 0;
+      }
 
       //this.updatetimer();
     },
@@ -3054,7 +3240,7 @@ module.exports = GameOver;
 
       this.player.position.x = 0;
 
-      this.countDown = 60;
+      this.countDown = 45;
 
       this.score = 0;
 
@@ -3093,13 +3279,13 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
@@ -3137,7 +3323,7 @@ module.exports = GameOver;
 
       
 
-        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'tryagain');
 
         this.gameover.anchor.setTo(0.5,0.5);
 
@@ -3149,17 +3335,17 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
-        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton = this.game.add.button(this.game.width/2, 310, 'btnrestart', this.restartClick, this);
         this.startButton.anchor.setTo(0.5,0.5);
 
         this.startButton.fixedToCamera = true;
@@ -3198,7 +3384,7 @@ module.exports = GameOver;
     },
 
     gameOver : function(){
-        this.game.state.start("play");
+        this.game.state.start("level4");
     },
 
     updateInitCounter : function(){
@@ -3220,7 +3406,7 @@ module.exports = GameOver;
 
       this.timer.start();
 
-      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Vamos!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
+      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Falta poco!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
       /*this.initText.font = "Revalia";
       this.initText.fontSize = "40px";
       this.initText.fill = "#ff0000";*/
@@ -3252,12 +3438,12 @@ module.exports = GameOver;
 
     
 
-      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal');
+      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal3');
       this.scorefinalboard.anchor.setTo(0.5, 0.5);
 
       this.scorefinalboard.fixedToCamera = true;
 
-      this.questionButton = this.game.add.button(this.game.width/2, 450, 'btnquestion', this.removeCanvas, this);
+      this.questionButton = this.game.add.button(this.game.width/2, 550, 'btnquestion', this.removeCanvas, this);
       this.questionButton.anchor.setTo(0.5,0.5);
 
       this.questionButton.fixedToCamera = true;
@@ -3305,18 +3491,36 @@ module.exports = GameOver;
 
 
     },
-    addSmallTable : function(x, y, tween){
+    addSmallTable : function(x, y, tween, toY, speed,horizontal,toX){
 
         var table = this.plataforms.create(x,y,'table')
         
         table.body.immovable = true;
 
+
+        if(typeof(tween) === "undefined"){
+          tween = false
+        }
+
+        if(typeof(horizontal) === "undefined"){
+          horizontal = false;
+        }
+
+        if(typeof(toX) === "undefined"){
+          toX = 0;
+        }
+
+
         if(tween)
-          this.game.add.tween(table.position).to( { x: 2350 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+          this.game.add.tween(table.position).to( { y: toY }, speed, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+
+
+        if(horizontal)
+          this.game.add.tween(table.position).to( { x: toX }, speed, Phaser.Easing.Back.InOut, true, 0, 1000, true);
 
 
     },
-    addBigTable : function(x, y, tween){
+    addBigTable : function(x, y, tween, speed, toY){
       
 
       var bigtable = this.bigplataform.create(x,y,'bigtable');
@@ -3328,37 +3532,68 @@ module.exports = GameOver;
       //bigtable.body.gravity.x = -10;
 
       if(tween)
-        this.game.add.tween(bigtable.position).to( { y: 100 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+        this.game.add.tween(bigtable.position).to( { y: toY }, speed, Phaser.Easing.Back.InOut, true, 0, 2000, true);
     },
     addWall : function(x, y){
 
-      var wall = this.walls.create(x,y,'wall')
+      var wall = this.walls.create(x,y,'wall4')
         
       wall.body.immovable = true;
       
+    },
+    changeWindDirection : function() {
+
+      var multi = Math.floor((max + 200) / 4),
+          frag = (Math.floor(Math.random() * 100) - multi);
+      max = max + frag;
+
+      if (max > 200) max = 150;
+      if (max < -200) max = -150;
+
+      this.setXSpeed(this.front_emitter, max);
+
+    },
+    setXSpeed : function(emitter, max) {
+
+      emitter.setXSpeed(max - 20, max);
+      emitter.forEachAlive(this.setParticleXSpeed, this, max);
+
+    },
+
+    setParticleXSpeed : function(particle, max) {
+
+      particle.body.velocity.x = max - Math.floor(Math.random() * 30);
+
     }
 
 
   };
   
   module.exports = Level4;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
   'use strict';
 
   //var Scoreboard = require('../prefabs/scoreboard');
-
+var i=0;
+var update_interval = 4 * 60;
+var max = 0;
   function Level5() {}
   Level5.prototype = {
 
     create: function() {
 
-      this.countDown = 14;
+    
+
+
+    
+
+      this.countDown = 45;
       this.counter = 4;
       this.score = 0;
       this.scoreText;
-      this.totalScore = 50;
-      this.limitCoins = 50;
+      this.totalScore = 200;
+      this.limitCoins = 200;
 
       this.limitLevel = 5;
 
@@ -3376,7 +3611,7 @@ module.exports = GameOver;
 
       this.background = this.game.add.tileSprite(0,0, 3000, 600,'background5');
 
-      this.ground = this.game.add.sprite(0,450,'floor');
+      this.ground = this.game.add.sprite(0,450,'floor4');
 
       /*var emitter;
 
@@ -3420,41 +3655,48 @@ module.exports = GameOver;
 
       this.bigCoins.enableBody = true;
       
-      this.addBigTable(650,180,true)
       
 
       //console.log(bigtable.cameraOffset);
 
       this.addSmallTable(150,350);
       this.addSmallTable(380,250);
-      this.addSmallTable(380,250);
 
-      this.addSmallTable(850,100);
+      this.addSmallTable(1000,400,true,245,4000);
 
-      this.addSmallTable(900,200);
+      this.addSmallTable(1000,140);
 
-      this.addSmallTable(1200,200);
+      this.addSmallTable(1400,240,false,0,1800,true,1600);
 
-      this.addSmallTable(980,300);
+      this.addSmallTable(1950,100);
+      this.addSmallTable(1950,200);
+      this.addSmallTable(1950,300);
 
-      this.addSmallTable(1200,400);
 
-      this.addSmallTable(1500,350);
+      //this.addBigTable(1800,100);
+      
 
-      this.addSmallTable(1500,250);
+      
 
-      this.addSmallTable(1500,150);
+      /*this.addSmallTable(2250,250,false,0,0,true);
 
-      this.addSmallTable(2250,250,true);
+      this.addSmallTable(2250,340);
 
-      this.addBigTable(2560,150,true);
+      this.addSmallTable(2700,260);*/
+
+       this.addBigTable(2780,250,true,5000,350);
+
+      this.addBigTable(2600,150,true,6000,400);
+
+
+     
 
 
 
 
       this.addWall(680, 265);
 
-      this.addWall(1950, 265);
+      this.addWall(2300, 265);
 
       /*this.plataforms.enableBody = true;
 
@@ -3502,63 +3744,67 @@ module.exports = GameOver;
         this.loadSmallCoins((i + 8) * 50,200);
       }
 
-
-      this.loadSmallCoins(750,200);
     
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 17) * 50,50);
+        this.loadSmallCoins((i + 20) * 50,50);
       }
 
-      for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 19) * 50,150);
+       for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 30) * 50,300);
       }
 
       for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 25) * 50,150);
+        this.loadSmallCoins((i + 35) * 50,300);
       }
 
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 20) * 50,250);
-      } 
+
+      
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 25) * 50,280);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,280);
+        this.loadSmallCoins((i + 39) * 50,50);
       }
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,200);
-      } 
-
-      for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 30) * 50,100);
-      } 
-
-      for(var i = 0; i < 2; i++){
-        this.loadSmallCoins((i + 35) * 50,280);
-      }
-
-      this.loadSmallCoins(2000,150);
 
       for(var i = 0; i < 3; i++){
-        this.loadSmallCoins((i + 47) * 50,100);
+        this.loadSmallCoins((i + 40) * 50,150);
+      }
+      for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 41) * 50,200);
       }
 
+      /*for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 35) * 50,380);
+      }
+
+      
+      for(var i = 0; i < 5; i++){
+        this.loadSmallCoins((i + 45) * 50,250);
+      } 
 
       for(var i = 0; i < 5; i++){
-        this.loadSmallCoins((i + 55) * 50,280);
+        this.loadSmallCoins((i + 54) * 50,200);
+      } 
+
+    
+
+      for(var i = 0; i < 2; i++){
+        this.loadSmallCoins((i + 50) * 50,380);
       }
+
+      
+
+      for(var i = 0; i < 3; i++){
+        this.loadSmallCoins((i + 54) * 50,380);
+      }*/
+
 
       //this.loadSmallCoins(200,100,40);
 
-      this.loadBigCoins(670,0);
-
-      this.loadBigCoins(2580,0);
 
       
+
+      this.loadBigCoins(2800,0);
+
+      this.loadBigCoins(2615,50);
 
 
       /*var bigCoin = this.bigCoins.create(590,0,'bigcoin'); 
@@ -3675,7 +3921,43 @@ module.exports = GameOver;
       this.limitlevelText.fixedToCamera = true;
 
 
-      
+    this.front_emitter = this.game.add.emitter(this.game.world.centerX, -32, 50);
+    this.front_emitter.makeParticles('snowflakes_large', [0, 1, 2, 3, 4, 5]);
+    this.front_emitter.maxParticleScale = 1;
+    this.front_emitter.minParticleScale = 0.5;
+    this.front_emitter.setYSpeed(100, 200);
+    this.front_emitter.gravity = 0;
+    this.front_emitter.width = this.game.world.width * 1.5;
+    this.front_emitter.minRotation = 0;
+    this.front_emitter.maxRotation = 40;
+
+    this.back_emitter = this.game.add.emitter(this.game.world.centerX, -32, 600);
+    this.back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
+    this.back_emitter.maxParticleScale = 0.6;
+    this.back_emitter.minParticleScale = 0.2;
+    this.back_emitter.setYSpeed(20, 100);
+    this.back_emitter.gravity = 0;
+    this.back_emitter.width = this.game.world.width * 1.5;
+    this.back_emitter.minRotation = 0;
+    this.back_emitter.maxRotation = 40;
+
+    this.mid_emitter = this.game.add.emitter(this.game.world.centerX, -32, 250);
+    this.mid_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
+    this.mid_emitter.maxParticleScale = 1.2;
+    this.mid_emitter.minParticleScale = 0.8;
+    this.mid_emitter.setYSpeed(50, 150);
+    this.mid_emitter.gravity = 0;
+    this.mid_emitter.width = this.game.world.width * 1.5;
+    this.mid_emitter.minRotation = 0;
+    this.mid_emitter.maxRotation = 40;
+
+    this.changeWindDirection();
+
+    console.log("nieve");
+    console.log(this.front_emitter);
+    this.front_emitter.start(false, 14000, 20);
+    this.mid_emitter.start(false, 12000, 40);
+    this.back_emitter.start(false, 6000, 1000);
 
       console.log("cronos");
       console.log(this.cronos);
@@ -3732,6 +4014,17 @@ module.exports = GameOver;
           this.player.animations.stop();
       }
       
+
+
+
+      i++;
+
+      if (i === update_interval)
+      {
+          this.changeWindDirection();
+          update_interval = Math.floor(Math.random() * 20) * 60; // 0 - 20sec @ 60fps
+          i = 0;
+      }
 
       //this.updatetimer();
     },
@@ -3873,7 +4166,7 @@ module.exports = GameOver;
 
       this.player.position.x = 0;
 
-      this.countDown = 60;
+      this.countDown = 45;
 
       this.score = 0;
 
@@ -3912,13 +4205,13 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
@@ -3956,7 +4249,7 @@ module.exports = GameOver;
 
       
 
-        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'gameover');
+        this.gameover = this.scoreboardGroup.create(this.game.width / 2, 100, 'tryagain');
 
         this.gameover.anchor.setTo(0.5,0.5);
 
@@ -3968,17 +4261,17 @@ module.exports = GameOver;
         this.scoreboard.fixedToCamera = true;
 
 
-        this.coinText = this.game.add.text(this.scoreboard.width + 240,180,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
+        this.coinText = this.game.add.text(this.scoreboard.width + 218,212,'0',{ font: 'bold 20px Arial', fill: '#355b00'});
         this.coinText.fixedToCamera = true;
 
         this.scoreboardGroup.add(this.coinText);
 
 
-        this.livesText = this.game.add.text(this.scoreboard.width + 240,230,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
+        this.livesText = this.game.add.text(this.scoreboard.width + 228,160,'0',{ font: 'bold 20px Arial', fill: '#355b00'})
         this.livesText.fixedToCamera = true;
         this.scoreboardGroup.add(this.livesText);
 
-        this.startButton = this.game.add.button(this.game.width/2, 300, 'btnrestart', this.restartClick, this);
+        this.startButton = this.game.add.button(this.game.width/2, 310, 'btnrestart', this.restartClick, this);
         this.startButton.anchor.setTo(0.5,0.5);
 
         this.startButton.fixedToCamera = true;
@@ -4017,7 +4310,7 @@ module.exports = GameOver;
     },
 
     gameOver : function(){
-        this.game.state.start("play");
+        this.game.state.start("level5");
     },
 
     updateInitCounter : function(){
@@ -4039,7 +4332,7 @@ module.exports = GameOver;
 
       this.timer.start();
 
-      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Vamos!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
+      this.initText = this.game.add.text(this.game.world.x + 300,100,'¡Falta poco!',{ font: 'bold 45px Cooper Std', fill: '#ff0000', stroke: '#ffffff', strokeThickness : 6 });
       /*this.initText.font = "Revalia";
       this.initText.fontSize = "40px";
       this.initText.fill = "#ff0000";*/
@@ -4071,12 +4364,12 @@ module.exports = GameOver;
 
     
 
-      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal');
+      this.scorefinalboard = this.scoreboardFinalGroup.create(this.game.width / 2, 300, 'scorefinal3');
       this.scorefinalboard.anchor.setTo(0.5, 0.5);
 
       this.scorefinalboard.fixedToCamera = true;
 
-      this.questionButton = this.game.add.button(this.game.width/2, 450, 'btnquestion', this.removeCanvas, this);
+      this.questionButton = this.game.add.button(this.game.width/2, 550, 'btnquestion', this.removeCanvas, this);
       this.questionButton.anchor.setTo(0.5,0.5);
 
       this.questionButton.fixedToCamera = true;
@@ -4088,7 +4381,8 @@ module.exports = GameOver;
       console.log(this.game);
     },
     removeCanvas : function(){
-      $("#plataform").hide();
+      //$("#plataform").hide();
+      this.game.state.start('final');
     },
     loadSmallCoins : function(x, y, cant, mult){
         
@@ -4123,18 +4417,36 @@ module.exports = GameOver;
 
 
     },
-    addSmallTable : function(x, y, tween){
+    addSmallTable : function(x, y, tween, toY, speed,horizontal,toX){
 
         var table = this.plataforms.create(x,y,'table')
         
         table.body.immovable = true;
 
+
+        if(typeof(tween) === "undefined"){
+          tween = false
+        }
+
+        if(typeof(horizontal) === "undefined"){
+          horizontal = false;
+        }
+
+        if(typeof(toX) === "undefined"){
+          toX = 0;
+        }
+
+
         if(tween)
-          this.game.add.tween(table.position).to( { x: 2350 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+          this.game.add.tween(table.position).to( { y: toY }, speed, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+
+
+        if(horizontal)
+          this.game.add.tween(table.position).to( { x: toX }, speed, Phaser.Easing.Back.InOut, true, 0, 1000, true);
 
 
     },
-    addBigTable : function(x, y, tween){
+    addBigTable : function(x, y, tween, speed, toY){
       
 
       var bigtable = this.bigplataform.create(x,y,'bigtable');
@@ -4146,21 +4458,45 @@ module.exports = GameOver;
       //bigtable.body.gravity.x = -10;
 
       if(tween)
-        this.game.add.tween(bigtable.position).to( { y: 100 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+        this.game.add.tween(bigtable.position).to( { y: toY }, speed, Phaser.Easing.Back.InOut, true, 0, 2000, true);
     },
     addWall : function(x, y){
 
-      var wall = this.walls.create(x,y,'wall')
+      var wall = this.walls.create(x,y,'wall4')
         
       wall.body.immovable = true;
       
+    },
+    changeWindDirection : function() {
+
+      var multi = Math.floor((max + 200) / 4),
+          frag = (Math.floor(Math.random() * 100) - multi);
+      max = max + frag;
+
+      if (max > 200) max = 150;
+      if (max < -200) max = -150;
+
+      this.setXSpeed(this.front_emitter, max);
+
+    },
+    setXSpeed : function(emitter, max) {
+
+      emitter.setXSpeed(max - 20, max);
+      emitter.forEachAlive(this.setParticleXSpeed, this, max);
+
+    },
+
+    setParticleXSpeed : function(particle, max) {
+
+      particle.body.velocity.x = max - Math.floor(Math.random() * 30);
+
     }
 
 
   };
   
   module.exports = Level5;
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -4192,7 +4528,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 'use strict';
 
@@ -4223,6 +4559,9 @@ Preload.prototype = {
     this.load.image('background4', 'assets/bg4extend.png');
     this.load.image('background5', 'assets/bglevel5extend.png');
     this.load.image('floor', 'assets/floorlevel1.png');
+    this.load.image('floor2', 'assets/floorlevel2.png');
+    this.load.image('floor3', 'assets/floorlevel3.png');
+    this.load.image('floor4', 'assets/floorlevel4.png');
     this.load.image('table', 'assets/tablelarge.png');
     this.load.image('bigtable', 'assets/tablebig.png');
     this.load.image('coin', 'assets/coinsmall.png');
@@ -4231,16 +4570,29 @@ Preload.prototype = {
     this.load.image('logohud', 'assets/logosmallhud.png')
     this.load.image('stars', 'assets/star.png');
     this.load.image('gameover', 'assets/gameover.png');
+    this.load.image('tryagain', 'assets/tryagain.png');
     this.load.image('scoreboard', 'assets/scoreboard.png');
     this.load.image('btnstart', 'assets/btncontinue.png');
     this.load.image('btnrestart', 'assets/restart.png');
     this.load.image('levelhud', 'assets/bglevelhud.png');
     this.load.image('key','assets/key.png');
     this.load.image('star','assets/star_particle.png');
-    this.load.image('scorefinal','assets/scorefinal.png');
+    this.load.image('scorefinal1','assets/scorefinal1.png');
+    this.load.image('scorefinal2','assets/scorefinal2.png');
+    this.load.image('scorefinal3','assets/scorefinal3.png');
     this.load.image('btnquestion','assets/btnpregunta.png');
     this.load.image('velo','assets/velo.png');
     this.load.image('wall','assets/wallup.png');
+    this.load.image('wall2','assets/walldown.png');
+    this.load.image('wall4','assets/walldown4.png');
+    this.load.image('sheet','assets/hoja.png');
+    this.load.image('bginit','assets/fondostart.png');
+    this.load.image('logofinal','assets/logofinal.png');
+    this.load.image('finalmessage','assets/messagelevel5.png');
+    this.load.image('buttoncompromiso','assets/btncompromiso.png');
+    this.load.image('sheet','assets/hoja.png');
+    this.load.spritesheet('snowflakes','assets/snowflakes.png',17,17);
+    this.load.spritesheet('snowflakes_large','assets/snowflakes_large.png',64,64);
     this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   },
   create: function() {
