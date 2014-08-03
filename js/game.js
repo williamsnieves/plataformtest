@@ -106,6 +106,7 @@ module.exports = GameOver;
     create: function() {
 
       this.countDown = 40;
+
       this.counter = 4;
       this.score = 0;
       this.scoreText;
@@ -1747,14 +1748,10 @@ var max = 0;
   function Level3() {}
   Level3.prototype = {
 
-    create: function() {
-
-    
-
-
-    
+    create: function() {    
 
       this.countDown = 40;
+
       this.counter = 4;
       this.score = 0;
       this.scoreText;
@@ -2656,13 +2653,10 @@ var max = 0;
   Level4.prototype = {
 
     create: function() {
-
-    
-
-
     
 
       this.countDown = 45;
+
       this.counter = 4;
       this.score = 0;
       this.scoreText;
@@ -3582,13 +3576,10 @@ var max = 0;
   Level5.prototype = {
 
     create: function() {
-
-    
-
-
     
 
       this.countDown = 45;
+
       this.counter = 4;
       this.score = 0;
       this.scoreText;
